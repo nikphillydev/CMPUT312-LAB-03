@@ -46,8 +46,8 @@ class Server:
 
 
 
-host = "192.168.0.2"
-port = 9999
+host = "169.254.64.237"
+port = 10016
 server = Server(host, port)
 queue = Queue()
 
