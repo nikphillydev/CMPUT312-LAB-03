@@ -1,6 +1,8 @@
 import cv2 as cv
 import numpy as np
 
+CAMERA_DEVICE = '/dev/video4'
+
 # optional argument for trackbars
 def nothing(x):
     pass
@@ -15,7 +17,7 @@ vl = 'V Low'
 vh = 'V High'
 
 # set up for video capture on camera 0
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(CAMERA_DEVICE)
 
 # create window for the slidebars
 cv.namedWindow(barsWindow, flags = cv.WINDOW_AUTOSIZE)
@@ -38,7 +40,7 @@ cv.setTrackbarPos(vh, barsWindow, 255)
 
 while(True):
     ret, frame = cap.read()
-    frame = cv.GaussianBlur(frame, (5, 5), 0)
+    # frame = cv.GaussianBlur(frame, (5, 5), 0)
     
     # convert to HSV from BGR
     hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
