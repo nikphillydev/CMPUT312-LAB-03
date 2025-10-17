@@ -48,6 +48,7 @@ class Tracker:
         if vc.isOpened(): # try to get the first frame
             rval, frame = vc.read()
         else:
+            print("Could not open camera")
             rval = False
         while rval:
             # Handle current frame
