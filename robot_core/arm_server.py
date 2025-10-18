@@ -1,9 +1,15 @@
-#!/usr/bin/python
-# RUN ON LAPTOP USING PYTHON 3.6
+# RUN ON LAPTOP
 
 import socket
 import time
 from queue import Queue
+
+
+class ArmServer:
+    def __init__(self):
+        pass
+
+
 
 # This class handles the Server side of the comunication between the laptop and the brick.
 class Server:
