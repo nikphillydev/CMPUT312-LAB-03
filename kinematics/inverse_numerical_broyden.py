@@ -17,11 +17,21 @@ def broydens_method(server: ArmServer, tracker: ArmTracker, initial_J) -> None:
     J_cur = initial_J   
     print("initial Jacobian:")
     print(J_cur)
-    target_point = clip(tracker.get_points()[1])
-    current_position = clip(tracker.get_points()[0])
-
+    print(tracker.get_points())
+    target = tracker.get_points()[1][0]
+    print(target)
+    target_point = clip(target)
+    print(target_point)
+    
+    current = tracker.get_points()[0]
+    print(current)
+    current_position = clip(current)
+    print(current_position)
+    
+    print("HERE 1")
     error_distance = get_distance_between_two_points(target_point, current_position)
-
+    print("HERE 2")
+    
     goal_points = []
     
     # Linearly interpolate between end-effector position and target position to create goal points
@@ -29,6 +39,7 @@ def broydens_method(server: ArmServer, tracker: ArmTracker, initial_J) -> None:
 
 
     while(get_distance_between_two_points(target_point, current_position) < GOAL_TOLERANCE):
+        print("HERE 3")
         target_point = clip(tracker.get_points()[1])
         current_position = clip(tracker.get_points()[0])
         error_distance = get_distance_between_two_points(target_point, current_position)
@@ -39,9 +50,9 @@ def broydens_method(server: ArmServer, tracker: ArmTracker, initial_J) -> None:
             t = i / num_points
             x = lerp(current_position[0], target_point[0], t)
             y = lerp(current_position[1], target_point[1], t)
-            goal_points.append((x,y))
+            goal_points.append([x,y])
         goal_points.append(target_point)   # Add final target position
-
+        print("HERE 4")
         for target in goal_points:
             current_position = clip(tracker.get_points()[0])
             error_distance = get_distance_between_two_points(target, current_position)

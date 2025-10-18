@@ -38,14 +38,18 @@ yellowHighMask = (32, 255, 255)
 
 class ArmTracker:
     def __init__(self, armColor, goalColor):
-        self.arm = [0,0,0]                  # (u, v, radius)
-        self.goal = [0,0,0]                 # (u, v, radius)
+        self.arm = np.zeros(3, dtype=float)                  # (u, v, radius)
+        self.goal = np.zeros(3, dtype=float)                 # (u, v, radius)
         self.point_lock = threading.Lock()
         thread = threading.Thread(target=self.TrackerThread, args=(armColor, goalColor), daemon=True)
         thread.start()
+        
+        # while self.arm is None and self.goal is None:
+        #     print("Arm tracker waiting for valid positions...")
+        #     time.sleep(1)
 
     def TrackerThread(self, armColor, goalColor):
-        print("Arm tracker started...")
+        print("Arm tracker thread started...")
         vc = cv2.VideoCapture(CAMERA_DEVICE)        # Get the camera
         if vc.isOpened():
             rval, frame = vc.read()
@@ -79,12 +83,12 @@ class ArmTracker:
             
         vc.release()
         cv2.destroyAllWindows()
-        print("Arm tracker ended")
+        print("Arm tracker thread ended")
 
     def get_points(self):
         """Returns the coordinates (u, v, radius) of the robot end-effector and goal point in the camera frame."""
         self.point_lock.acquire()
-        points = [self.arm, self.goal]
+        points = [self.arm.tolist(), self.goal.tolist()]
         self.point_lock.release()
         return points
     
@@ -140,7 +144,7 @@ class ArmTracker:
                 
 if __name__ == "__main__":
     print("Tracker Setup")
-    tracker = ArmTracker(GREEN, BLUE)
+    tracker = ArmTracker(YELLOW, BLUE)
     while True:
         points = tracker.get_points()
         print("Point is at: " + str(points[0]))
