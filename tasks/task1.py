@@ -13,6 +13,8 @@ def run():
     driver = ArmDriver(INITIAL_THETA1, INITIAL_THETA2)
     
     while (True):
-        angles = client.receive_angles()
-        driver.set_angles(angles)
+        delta_theta = client.receive_angles()
+        current_theta = driver.get_angles()
+        new_theta = list(x+y for x, y in zip(current_theta, delta_theta))
+        driver.set_angles(new_theta)
         client.send_ack()

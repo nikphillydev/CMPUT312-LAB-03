@@ -7,7 +7,7 @@ import numpy as np
 import threading
 import time
 
-CAMERA_DEVICE = '/dev/video4'
+CAMERA_DEVICE = '/dev/video7'
 RED = 'r'
 BLUE = 'b'
 ORANGE = 'o'
@@ -20,7 +20,7 @@ redLowMask  = (0,  155, 141)
 redHighMask = (15, 255, 255)
 
 #If the ball is blue
-blueLowMask  = (98,  98,  136)
+blueLowMask  = (98,  90,  136)
 blueHighMask = (119, 255, 255)
 
 #If the ball is orange
@@ -38,15 +38,21 @@ yellowHighMask = (32, 255, 255)
 
 class ArmTracker:
     def __init__(self, armColor, goalColor):
-        self.arm = np.zeros(3, dtype=float)                  # (u, v, radius)
-        self.goal = np.zeros(3, dtype=float)                 # (u, v, radius)
+        self.arm = None                  # (u, v, radius)
+        self.goal = None                 # (u, v, radius)
         self.point_lock = threading.Lock()
         thread = threading.Thread(target=self.TrackerThread, args=(armColor, goalColor), daemon=True)
         thread.start()
         
-        # while self.arm is None and self.goal is None:
-        #     print("Arm tracker waiting for valid positions...")
-        #     time.sleep(1)
+        while True:
+            self.point_lock.acquire()
+            arm_valid = self.arm is not None
+            goal_valid = self.goal is not None
+            self.point_lock.release()
+            if arm_valid and goal_valid:
+                print("Arm tracker found valid points")
+                break
+            time.sleep(1)
 
     def TrackerThread(self, armColor, goalColor):
         print("Arm tracker thread started...")
@@ -94,7 +100,7 @@ class ArmTracker:
     
     def get_location(self, frame, color):
         # blurred = cv2.GaussianBlur(frame, (11, 11), 0)        # Uncomment for gaussian blur
-        blurred = cv2.medianBlur(frame, 11)
+        # blurred = cv2.medianBlur(frame, 11)
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         if color == 'r':
             # Red Tracking
@@ -113,12 +119,12 @@ class ArmTracker:
             mask = cv2.inRange(hsv, yellowLowMask, yellowHighMask)
             
         # Perform erosion and dilation in the image (in 11x11 pixels squares) in order to reduce the "blips" on the mask
-        mask = cv2.erode(mask, np.ones((11, 11),np.uint8), iterations=2)
-        mask = cv2.dilate(mask, np.ones((11, 11),np.uint8), iterations=5)
+        # mask = cv2.erode(mask, np.ones((11, 11),np.uint8), iterations=2)
+        # mask = cv2.dilate(mask, np.ones((11, 11),np.uint8), iterations=5)
         
         # Mask the blurred image so that we only consider the areas with the desired colour
-        masked = cv2.bitwise_and(blurred, blurred, mask= mask)
-        # masked = cv2.bitwise_and(frame, frame, mask= mask)
+        # masked = cv2.bitwise_and(blurred, blurred, mask= mask)
+        masked = cv2.bitwise_and(frame, frame, mask= mask)
         
         # Show masked image for debugging
         cv2.imshow(str("Masked " + color), masked)

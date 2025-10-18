@@ -25,30 +25,46 @@ greenHighMask= (150, 255, 255)
 point = (0,0,0)
 goal = (0,0,0)
 print("Tracker Started")
-cap = cv.VideoCapture(1)
+
+video1 = cv.VideoCapture("/dev/video7")
+video2 = cv.VideoCapture("/dev/video9")
+
+
 while(True):
-    ret, frame = cap.read()
-    frame = cv.GaussianBlur(frame, (5, 5), 0)
+    ret1, frame1 = video1.read()
+    ret2, frame2 = video2.read()
     
-    # convert to HSV from BGR
-    hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+    if ret1:
+        cv.imshow('Frame1 Raw', frame1)
+    else:
+        print(ret1)
+    if ret2:
+        cv.imshow('Frame2 Raw', frame2)
+    else:
+        print(ret2)
+    
+    # frame = cv.GaussianBlur(frame, (5, 5), 0)
+    
+    # # convert to HSV from BGR
+    # hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
 
-    # make array for final values
-    HSVLOW = np.array([0, 50, 50])
-    HSVHIGH = np.array([10, 255, 255])
+    # # make array for final values
+    # HSVLOW = np.array([0, 50, 50])
+    # HSVHIGH = np.array([10, 255, 255])
 
-    # apply the range on a mask
-    mask = cv.inRange(hsv, HSVLOW, HSVHIGH)
-    maskedFrame = cv.bitwise_and(frame, frame, mask = mask)
+    # # apply the range on a mask
+    # mask = cv.inRange(hsv, HSVLOW, HSVHIGH)
+    # maskedFrame = cv.bitwise_and(frame, frame, mask = mask)
 
-    # display the camera and masked images
-    cv.imshow('Masked', maskedFrame)
-    cv.imshow('Camera', frame)
+    # # display the camera and masked images
+    # cv.imshow('Masked', maskedFrame)
+    # cv.imshow('Camera', frame)
 
 	# check for q to quit program with 5ms delay
     if cv.waitKey(5) & 0xFF == ord('q'):
         break
 
 # clean up our resources
-cap.release()
+video1.release()
+video2.release()
 cv.destroyAllWindows()
