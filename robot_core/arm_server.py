@@ -1,6 +1,7 @@
 # RUN ON LAPTOP
 
 import socket
+import time
 
 RECEIVE_BYTE_SIZE = 1024
 
@@ -12,7 +13,7 @@ class ArmServer:
         self.server_sock.bind(host, port)
         self.server_sock.listen(5)
         self.client_sock, self.client_addr = self.server_sock.accept()
-        self.connected = True
+        print("Server accepted client connection!")
         pass
     
     def send_angles(self, base_angle, joint_angle):

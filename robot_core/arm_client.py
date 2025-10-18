@@ -16,12 +16,9 @@ class ArmClient:
         '''Performs a blocking receive call for a movement request and returns the received angles (radians).'''
         print("Client waiting for angles...")
         string_data = self.sock.recv(RECEIVE_BYTE_SIZE).decode()
-        string_data_list = string_data.split(',')
-        angle_data_list = []
-        for string in string_data_list:
-            angle_data_list.append(float(string))
-        print("Angles received (radians): " + str(angle_data_list))
-        return angle_data_list
+        print("Client received angles (radians): " + string_data)
+        str_theta1, str_theta2 = string_data.split(',')
+        return [float(str_theta1), str(str_theta2)]
     
     def send_ack(self):
         '''Send the ACK message back to the server for client receive acknowledgement.'''
