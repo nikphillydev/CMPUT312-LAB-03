@@ -1,6 +1,6 @@
 import time
 from math import degrees
-from typing import Tuple
+from typing import List
 from kinematics.forward import forward_kinematics
 from kinematics.helper import compute_jacobian, invert_2x2_matrix, get_distance_between_two_points, lerp
 from robot_core.arm_driver import ArmDriver
@@ -9,7 +9,8 @@ GOAL_TOLERANCE = 0.1        # cm
 UPDATE_FREQUENCY = 10       # Hz
 NUM_POINTS_PER_CM = 1       # 1 pt / cm linear interpolation
 
-def newtons_method(arm: ArmDriver, target_pt: Tuple[float, float]) -> None:
+
+def newtons_method(arm: ArmDriver, target_pt: List[float]) -> None:
     """Apply Newton's method to move the robot arm end-effector to the target point (x,y) coordinate in cm."""
     
     goal_points = []
@@ -25,7 +26,7 @@ def newtons_method(arm: ArmDriver, target_pt: Tuple[float, float]) -> None:
         t = i / num_points
         x = lerp(end_effector_pt[0], target_pt[0], t)
         y = lerp(end_effector_pt[1], target_pt[1], t)
-        goal_points.append((x,y))
+        goal_points.append([x, y])
     goal_points.append(target_pt)       # Add final target position
     
     for target in goal_points:
@@ -39,7 +40,7 @@ def newtons_method(arm: ArmDriver, target_pt: Tuple[float, float]) -> None:
             print("angles: " + str(r))
             
             # Compute error vector between target position and end-effector position
-            dx = tuple(x-y for x, y in zip(target, end_effector_pt))
+            dx = list(x-y for x, y in zip(target, end_effector_pt))
             
             # Compute inverse Jacobian of robot arm in current configuration
             jacobian = compute_jacobian(arm.get_lengths(), r)
@@ -49,14 +50,13 @@ def newtons_method(arm: ArmDriver, target_pt: Tuple[float, float]) -> None:
                 break
             
             # Find change in joint angles based on change in position 
-            dr = (i_jacobian[0][0]*dx[0] + i_jacobian[0][1]*dx[1],
-                  i_jacobian[1][0]*dx[0] + i_jacobian[1][1]*dx[1])
-            dr = (degrees(dr[0]), degrees(dr[1]))
+            dr = [i_jacobian[0][0]*dx[0] + i_jacobian[0][1]*dx[1],
+                  i_jacobian[1][0]*dx[0] + i_jacobian[1][1]*dx[1]]
 
-            print("change in angles: " + str(dr))
+            print("change in angles (radians): " + str(dr))
             
             # Compute new joint angles and move robot arm
-            r = tuple(x+y for x, y in zip(r, dr))
+            r = list(x+y for x, y in zip(r, dr))
             arm.set_angles(r)
             
             # Re-compute end-effector position and distance error to target

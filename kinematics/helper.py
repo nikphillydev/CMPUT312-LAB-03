@@ -1,7 +1,7 @@
 from math import sqrt, sin, cos, acos, radians, degrees
-from typing import Tuple, List, Optional
+from typing import List, Optional
 
-def get_angle_between_two_lines(point1: Tuple[float, float], point2: Tuple[float, float], point3: Tuple[float, float]) -> float:
+def get_angle_between_two_lines(point1: List[float], point2: List[float], point3: List[float]) -> float:
     """Return the angle (deg) between the lines point1->point2 and point1->point3."""
     vector1 = tuple(x-y for x, y in zip(point1, point2))
     vector2 = tuple(x-y for x, y in zip(point1, point3))
@@ -10,16 +10,16 @@ def get_angle_between_two_lines(point1: Tuple[float, float], point2: Tuple[float
     angle = acos(numerator / denominator)
     return degrees(angle)
 
-def get_distance_between_two_points(point1: Tuple[float, float], point2: Tuple[float, float]) -> float:
+def get_distance_between_two_points(point1: List[float], point2: List[float]) -> float:
     """Return the distance between point1 (x1, y1) and point2 (x2, y2)."""
     x_term = (point2[0] - point1[0])**2
     y_term = (point2[1] - point1[1])**2
     return sqrt(x_term + y_term)
 
-def compute_jacobian(lengths: Tuple[float, float], angles: Tuple[float, float]) -> List[List[float]]:
-    """Compute and return the 2x2 Jacobian matrix of a 2D robot arm with link lengths (cm) and joint angles (deg)."""
+def compute_jacobian(lengths: List[float], angles: List[float]) -> List[List[float]]:
+    """Compute and return the 2x2 Jacobian matrix of a 2D robot arm with link lengths (cm) and joint angles (radians)."""
     l1, l2 = lengths
-    theta1, theta2 = radians(angles[0]), radians(angles[1])
+    theta1, theta2 = angles[0], angles[1]
     row1 = [-l1*sin(theta1) - l2*sin(theta1+theta2), -l2*sin(theta1+theta2)]
     row2 = [ l1*cos(theta1) + l2*cos(theta1+theta2),  l2*cos(theta1+theta2)]
     return [row1, row2]

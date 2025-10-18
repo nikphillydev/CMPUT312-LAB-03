@@ -13,7 +13,5 @@ def analytical_method(arm:ArmDriver, target_point:Tuple[float, float]) -> None:
     theta2 = math.acos(D) # for elbow up
     # theta2 = -math.acos(D) # for elbow down
     theta1 = math.atan2(y , x) - math.atan2((l2 * math.sin(theta2)) , (l1 + l2 * math.cos(theta2)))
-    theta2 = math.degrees(theta2)
-    theta1 = math.degrees(theta1)
-    print("Theta1 and theta2 will be:" + str(theta1) + " " + str(theta2))
-    arm.set_angles((theta1, theta2))
+    print("Theta1 and theta2 will be (degrees):" + str(math.degrees(theta1)) + " " + str(math.degrees(theta2)))
+    arm.set_angles([theta1, theta2])
