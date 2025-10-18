@@ -3,7 +3,7 @@ import time
 from kinematics.compute_Jacobian import compute_jacobian
 from kinematics.inverse_numerical_broyden import broydens_method, THETA1_TEST_JACOBIAN, THETA2_TEST_JACOBIAN
 from robot_core.arm_server import ArmServer
-from robot_core.arm_tracker import ArmTracker, YELLOW, BLUE
+from robot_core.arm_tracker import ArmTracker, YELLOW, BLUE, GREEN
 from robot_core.network_settings import HOST, PORT
 
 
@@ -12,7 +12,7 @@ from robot_core.network_settings import HOST, PORT
 def run():
     # initial Jacobian
     server = ArmServer(HOST, PORT)
-    tracker = ArmTracker('y', 'b')
+    tracker = ArmTracker('g', 'b')
     old_points_1 = tracker.get_points()
     old_points_1 = old_points_1[0][0:2]
     server.send_angles(math.radians(THETA1_TEST_JACOBIAN), 0)

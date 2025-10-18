@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 
-CAMERA_DEVICE = '/dev/video7'
+CAMERA_DEVICE = '/dev/video4'
 
 # optional argument for trackbars
 def nothing(x):

@@ -7,7 +7,7 @@ import numpy as np
 import threading
 import time
 
-CAMERA_DEVICE = '/dev/video7'
+CAMERA_DEVICE = '/dev/video4'
 RED = 'r'
 BLUE = 'b'
 ORANGE = 'o'
@@ -28,8 +28,8 @@ orangeLowMask  = (5,  50,  50)
 orangeHighMask = (20, 255, 255)
 
 #If the ball is green
-greenLowMask  = (44, 118, 119)
-greenHighMask = (70, 255, 255)
+greenLowMask  = (42, 58,  109)
+greenHighMask = (90, 255, 255)
 
 #If the ball is yellow
 yellowLowMask  = (25, 166, 194)
@@ -99,6 +99,7 @@ class ArmTracker:
         return points
     
     def get_location(self, frame, color):
+        """Detects the largest color region of the given color and returns its centroid and approximate size (radius)."""
         # blurred = cv2.GaussianBlur(frame, (11, 11), 0)        # Uncomment for gaussian blur
         # blurred = cv2.medianBlur(frame, 11)
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -129,10 +130,32 @@ class ArmTracker:
         # Show masked image for debugging
         cv2.imshow(str("Masked " + color), masked)
         
-        # Convert the masked image to gray scale (Required by HoughCircles routine)
-        result = cv2.cvtColor(masked, cv2.COLOR_BGR2GRAY)
-        # Detect circles in the image using Canny edge and Hough transform
-        circles = cv2.HoughCircles(result, cv2.HOUGH_GRADIENT, 1.5, 300, param1=100, param2=20, minRadius=20, maxRadius=200)
+        # Find largest contour
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        if len(contours) == 0:
+            return None
+
+        # Find the contour with the largest area
+        largest_contour = max(contours, key=cv2.contourArea)
+
+        # Calculate spatial moments of the largest contour
+        M = cv2.moments(largest_contour)
+
+        # Avoid division by zero
+        if M["m00"] == 0:
+            return None
+
+        # Centroid coordinates
+        cx = int(M["m10"] / M["m00"])
+        cy = int(M["m01"] / M["m00"])
+
+        # Approximate the size using the contour area (convert to equivalent circle radius)
+        area = cv2.contourArea(largest_contour)
+        radius = int(np.sqrt(area / np.pi))
+
+        # Return array consistent with previous format [[(u, v, r)]]
+        circles = np.array([[(cx, cy, radius)]], dtype=np.float32)
         
         return circles
             
@@ -150,7 +173,7 @@ class ArmTracker:
                 
 if __name__ == "__main__":
     print("Tracker Setup")
-    tracker = ArmTracker(YELLOW, BLUE)
+    tracker = ArmTracker(GREEN, BLUE)
     while True:
         points = tracker.get_points()
         print("Point is at: " + str(points[0]))

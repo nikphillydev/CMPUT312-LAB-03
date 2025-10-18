@@ -5,7 +5,7 @@ from robot_core.arm_driver import ArmDriver
 from robot_core.network_settings import HOST, PORT
 
 INITIAL_THETA1 = 0
-INITIAL_THETA2 = 0
+INITIAL_THETA2 = 90
 
 def run():
     """Receive angles from server and move robot arm."""
