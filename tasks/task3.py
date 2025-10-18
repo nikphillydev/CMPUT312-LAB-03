@@ -1,9 +1,7 @@
 # RUN ON HOST
 
 from robot_core.arm_server import ArmServer
-
-HOST = "169.254.150.69"
-PORT = 10016
+from robot_core.network_settings import HOST, PORT
 
 def run():
     server = ArmServer(HOST, PORT)

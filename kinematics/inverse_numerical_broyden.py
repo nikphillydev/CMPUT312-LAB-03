@@ -18,7 +18,7 @@ def broydens_method(server: ArmServer, tracker: ArmTracker, initial_J) -> None:
     print("initial Jacobian:")
     print(J_cur)
     print(tracker.get_points())
-    target = tracker.get_points()[1][0]
+    target = tracker.get_points()[1]
     print(target)
     target_point = clip(target)
     print(target_point)

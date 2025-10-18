@@ -2,9 +2,8 @@
 
 from robot_core.arm_client import ArmClient
 from robot_core.arm_driver import ArmDriver
+from robot_core.network_settings import HOST, PORT
 
-HOST = "169.254.150.69"
-PORT = 10016
 INITIAL_THETA1 = 0
 INITIAL_THETA2 = 0
 

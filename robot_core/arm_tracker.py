@@ -66,12 +66,12 @@ class ArmTracker:
 
             if circlesPoint is not None:
                 self.point_lock.acquire()
-                self.arm = circlesPoint[0]
+                self.arm = circlesPoint[0][0]
                 self.point_lock.release()
                 
             if circlesGoal is not None:
                 self.point_lock.acquire()
-                self.goal = circlesGoal[0]
+                self.goal = circlesGoal[0][0]
                 self.point_lock.release()
 
             cv2.imshow("Result", frame)     # Shows the original image with the detected circles drawn.
