@@ -1,4 +1,4 @@
-from math import sqrt, sin, cos, acos, radians, degrees
+from math import sqrt, sin, cos, acos, degrees
 from typing import List, Optional
 
 def get_angle_between_two_lines(point1: List[float], point2: List[float], point3: List[float]) -> float:
