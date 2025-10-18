@@ -7,7 +7,7 @@ from robot_core.arm_tracker import ArmTracker
 import time
 from math import radians
 
-GOAL_TOLERANCE = 1                  # cm
+GOAL_TOLERANCE = 1                  # pixel
 UPDATE_FREQUENCY = 2                # Hz
 MAX_ABS_ANGLE_DEG = 180.0           # degrees
 NUM_POINTS_PER_PIXEL = 0.5          # 1 pt / cm linear interpolation
@@ -75,16 +75,16 @@ def broydens_method(server: ArmServer, tracker: ArmTracker, initial_J) -> None:
                 current_angle = matrix_2_to_2_addition(current_angle, deltax)
                 server.send_angles(current_angle[0], current_angle[1])
 
-            # # clamp the angles
-            # current_angle = [
-            #     max(radians(-MAX_ABS_ANGLE_DEG), min(radians(MAX_ABS_ANGLE_DEG), proposed_angle[0])),
-            #     max(radians(-MAX_ABS_ANGLE_DEG), min(radians(MAX_ABS_ANGLE_DEG), proposed_angle[1]))
-            # ]
-            # deltax = matrix_subtraction(current_angle, previous_angle)
-            # print("robot move to angles:")
-            # print((current_angle[0], current_angle[1]))
-            # # move the robot joints
-            # arm.set_angles((current_angle[0], current_angle[1]))
+                # # clamp the angles
+                # current_angle = [
+                #     max(radians(-MAX_ABS_ANGLE_DEG), min(radians(MAX_ABS_ANGLE_DEG), proposed_angle[0])),
+                #     max(radians(-MAX_ABS_ANGLE_DEG), min(radians(MAX_ABS_ANGLE_DEG), proposed_angle[1]))
+                # ]
+                # deltax = matrix_subtraction(current_angle, previous_angle)
+                # print("robot move to angles:")
+                # print((current_angle[0], current_angle[1]))
+                # # move the robot joints
+                # arm.set_angles((current_angle[0], current_angle[1]))
             
             # update position
                 previous_position = current_position
