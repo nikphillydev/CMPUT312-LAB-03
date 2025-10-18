@@ -3,22 +3,22 @@ from kinematics.forward import forward_kinematics
 from kinematics.helper import compute_jacobian, invert_2x2_matrix, get_distance_between_two_points, lerp, matrix_subtraction, matrix_addition, matrix_multiplication, matrix_transpose, matrix_2_to_2_mul, matrix_4_to_2_mul, matrix_division, matrix_2_to_2_addition, clip
 from robot_core.arm_driver import ArmDriver
 from robot_core.arm_server import ArmServer
-from VSMaterial.color_tracking import Tracker
+from robot_core.arm_tracker import ArmTracker
 import time
 from math import radians
 
-GOAL_TOLERANCE = 1          # cm
-UPDATE_FREQUENCY = 2       # Hz
-MAX_ABS_ANGLE_DEG = 180.0        # degrees
-NUM_POINTS_PER_PIXEL = 0.5       # 1 pt / cm linear interpolation
+GOAL_TOLERANCE = 1                  # cm
+UPDATE_FREQUENCY = 2                # Hz
+MAX_ABS_ANGLE_DEG = 180.0           # degrees
+NUM_POINTS_PER_PIXEL = 0.5          # 1 pt / cm linear interpolation
 
-def broydens_method(server: ArmServer, tracker: Tracker, initial_J) -> None:
+def broydens_method(server: ArmServer, tracker: ArmTracker, initial_J) -> None:
     # move robot joint first
     J_cur = initial_J   
     print("initial Jacobian:")
     print(J_cur)
-    target_point = clip(tracker.getpoints()[1])
-    current_position = clip(tracker.getpoints()[0])
+    target_point = clip(tracker.get_points()[1])
+    current_position = clip(tracker.get_points()[0])
 
     error_distance = get_distance_between_two_points(target_point, current_position)
 
@@ -29,8 +29,8 @@ def broydens_method(server: ArmServer, tracker: Tracker, initial_J) -> None:
 
 
     while(get_distance_between_two_points(target_point, current_position) < GOAL_TOLERANCE):
-        target_point = clip(tracker.getpoints()[1])
-        current_position = clip(tracker.getpoints()[0])
+        target_point = clip(tracker.get_points()[1])
+        current_position = clip(tracker.get_points()[0])
         error_distance = get_distance_between_two_points(target_point, current_position)
         current_angle = [radians(5), radians(5)]
     # Linearly interpolate between end-effector position and target position to create goal points
@@ -43,7 +43,7 @@ def broydens_method(server: ArmServer, tracker: Tracker, initial_J) -> None:
         goal_points.append(target_point)   # Add final target position
 
         for target in goal_points:
-            current_position = clip(tracker.getpoints()[0])
+            current_position = clip(tracker.get_points()[0])
             error_distance = get_distance_between_two_points(target, current_position)
             print("moving to target point:")
             print(target)
@@ -77,7 +77,7 @@ def broydens_method(server: ArmServer, tracker: Tracker, initial_J) -> None:
             
             # update position
                 previous_position = current_position
-                current_position = clip(tracker.getpoints()[0])
+                current_position = clip(tracker.get_points()[0])
                 delta_potision = [current_position[0] - previous_position[0],current_position[1] - previous_position[1]]
             # update Jacobian
                 scalar = deltax[0] * deltax[0] + deltax[1]* deltax[1]
