@@ -10,7 +10,7 @@ def get_angle_between_two_lines(point1: List[float], point2: List[float], point3
     angle = acos(numerator / denominator)
     return degrees(angle)
 
-def get_distance_between_two_points(point1: List[float], point2: List[float]) -> float:
+def get_distance_between_two_points(point1, point2) -> float:
     """Return the distance between point1 (x1, y1) and point2 (x2, y2)."""
     x_term = (point2[0] - point1[0])**2
     y_term = (point2[1] - point1[1])**2
@@ -104,3 +104,6 @@ def matrix_2_to_2_addition(matrix1, matrix2):
     b2= matrix2[1]
     add = [a1 + a2, b1 + b2]
     return add
+
+def clip(a:Tuple):
+    return list(a[0:2])
