@@ -38,6 +38,7 @@ class Tracker:
     def __init__(self, pointColor, goalColor):
         self.point = (0,0,0)
         self.goal = (0,0,0)
+        self._lock = threading.Lock()
         thread = threading.Thread(target=self.TrackerThread, args=(pointColor, goalColor), daemon=True)
         thread.start()
 
@@ -59,10 +60,14 @@ class Tracker:
             self.DrawCircles(frame, circlesGoal, (0, 0, 255))
 
             if circlesPoint is not None:
+                self._lock.acquire()
                 self.point = circlesPoint[0]
-            
+                self._lock.release()
+                
             if circlesGoal is not None:
+                self._lock.acquire()
                 self.goal = circlesGoal[0]
+                self._lock.release()
 
             # Shows the original image with the detected circles drawn.
             cv2.imshow("Result", frame)
@@ -75,6 +80,12 @@ class Tracker:
         vc.release()
         cv2.destroyAllWindows()
         print("Tracker Ended")
+
+    def getpoints(self):
+        self._lock.acquire()
+        goal_points = [self.point, self.goal]
+        self._lock.release()
+        return goal_points
 
     def GetLocation(self, frame, color):
         # Uncomment for gaussian blur
@@ -121,7 +132,8 @@ class Tracker:
                 # The circles and rectangles are drawn on the original image.
                 cv2.circle(frame, (x, y), r, (0, 255, 0), 4)
                 cv2.rectangle(frame, (x - 5, y - 5), (x + 5, y + 5), dotColor, -1)
-        
+    
+
             
         
 
