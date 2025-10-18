@@ -1,49 +1,50 @@
+# RUN ON BRICK
+
 from ev3dev2.motor import Motor, OUTPUT_A, OUTPUT_B, SpeedPercent
+import math
 
 class ArmDriver:
     def __init__(self, initial_theta1 = 0.0, initial_theta2 = 0.0):
-        self.link1_length = 12.75                        # cm
-        self.link2_length = 7.6                         # cm
-        self.initial_theta1 = initial_theta1            # deg
-        self.initial_theta2 = initial_theta2            # deg
+        '''Setup the robot arm driver with initial configuration values (degrees).'''
+        self.link1_length = 12.75                               # cm
+        self.link2_length = 7.6                                 # cm
+        self.link1_start_count = self.link1_servo.position - self.initial_theta1
+        self.link2_start_count = self.link2_servo.position - self.initial_theta2
         
         self.link1_servo = Motor(OUTPUT_A)
         self.link2_servo = Motor(OUTPUT_B)
-        
         self.link1_servo.reset()
         self.link2_servo.reset()
         
-        self.link1_start_count = self.link1_servo.position - self.initial_theta1
-        self.link2_start_count = self.link2_servo.position - self.initial_theta2
-    
+
     def get_theta1(self):
-        '''Return robot arm theta 1 in degrees.'''
+        '''Return robot arm theta 1 in radians.'''
         current_count = self.link1_servo.position
         delta_count = current_count - self.link1_start_count
-        return delta_count
+        return math.radians(delta_count)
     
     def get_theta2(self):
-        '''Return robot arm theta 2 in degrees.'''
+        '''Return robot arm theta 2 in radians.'''
         current_count = self.link2_servo.position
         delta_count = current_count - self.link2_start_count
-        return delta_count
+        return math.radians(delta_count)
     
     def get_angles(self):
-        '''Return robot arm angles (theta1, theta2) in degrees.'''
+        '''Return robot arm angles [theta1, theta2] in radians.'''
         return [self.get_theta1(), self.get_theta2()]
     
     def set_theta1(self, theta1):
-        '''Set robot arm theta 1 in degrees.'''
-        target_count = theta1 + self.link1_start_count
+        '''Set robot arm theta 1 in radians.'''
+        target_count = math.degrees(theta1) + self.link1_start_count
         self.link1_servo.on_to_position(SpeedPercent(5), target_count, brake=False)
         
     def set_theta2(self, theta2):
-        '''Set robot arm theta 2 in degrees.'''
-        target_count = theta2 + self.link2_start_count
+        '''Set robot arm theta 2 in radians.'''
+        target_count = math.degrees(theta2) + self.link2_start_count
         self.link2_servo.on_to_position(SpeedPercent(5), target_count, brake=False)
     
     def set_angles(self, angles):
-        '''Set robot arm angles (theta1, theta2) in degrees.'''
+        '''Set robot arm angles [theta1, theta2] in radians.'''
         self.set_theta1(angles[0])
         self.set_theta2(angles[1])
         

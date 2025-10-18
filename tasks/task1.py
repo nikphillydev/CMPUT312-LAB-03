@@ -1,3 +1,5 @@
+# RUN ON BRICK
+
 from robot_core.arm_client import ArmClient
 from robot_core.arm_driver import ArmDriver
 
@@ -7,6 +9,7 @@ INITIAL_THETA1 = 0
 INITIAL_THETA2 = 0
 
 def run():
+    """Receive angles from server and move robot arm."""
     client = ArmClient(HOST, PORT)
     driver = ArmDriver(INITIAL_THETA1, INITIAL_THETA2)
     

@@ -1,29 +1,31 @@
 # RUN ON BRICK
     
-import time
 import socket
 
 RECEIVE_BYTE_SIZE = 1024
 
 class ArmClient:
+    """This class handles the client communication on the EV3DEV computer. It connects to the server and can listen for movement requests."""
     def __init__(self, host, port):
+        '''Setup a client to connect to server at host IP and port.'''
         self.sock = socket.socket(socket.AF_NET, socket.SOCK_STREAM)
         self.sock.connect(host, port)
         pass
     
     def receive_angles(self):
-        """Blocking receive."""
-        print("Waiting for angles...")
+        '''Performs a blocking receive call for a movement request and returns the received angles (radians).'''
+        print("Client waiting for angles...")
         string_data = self.sock.recv(RECEIVE_BYTE_SIZE).decode()
         string_data_list = string_data.split(',')
         angle_data_list = []
         for string in string_data_list:
             angle_data_list.append(float(string))
-        print("Angles received: " + str(angle_data_list))
+        print("Angles received (radians): " + str(angle_data_list))
         return angle_data_list
     
     def send_ack(self):
-        print("Sending receive acknowledgement")
+        '''Send the ACK message back to the server for client receive acknowledgement.'''
+        print("Client sending receive acknowledgement")
         self.sock.send("ACK".encode())
     
     
