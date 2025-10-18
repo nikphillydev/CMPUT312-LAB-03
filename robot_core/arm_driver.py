@@ -8,13 +8,14 @@ class ArmDriver:
         '''Setup the robot arm driver with initial configuration values (degrees).'''
         self.link1_length = 12.75                               # cm
         self.link2_length = 7.6                                 # cm
-        self.link1_start_count = self.link1_servo.position - self.initial_theta1
-        self.link2_start_count = self.link2_servo.position - self.initial_theta2
         
         self.link1_servo = Motor(OUTPUT_A)
         self.link2_servo = Motor(OUTPUT_B)
         self.link1_servo.reset()
         self.link2_servo.reset()
+        
+        self.link1_start_count = self.link1_servo.position - initial_theta1
+        self.link2_start_count = self.link2_servo.position - initial_theta2
         
 
     def get_theta1(self):

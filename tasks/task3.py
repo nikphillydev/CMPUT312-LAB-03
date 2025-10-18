@@ -18,3 +18,5 @@ def run():
         initial_theta2 += increment
         if initial_theta1 > 1.5:
             increment *= -1
+        if initial_theta1 < 0:
+            increment *= -1

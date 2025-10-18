@@ -10,8 +10,9 @@ class ArmServer:
     def __init__(self, host, port):
         '''Setup a server with host IP and port.'''
         self.server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_sock.bind(host, port)
+        self.server_sock.bind((host, port))
         self.server_sock.listen(5)
+        print("Server listening for connections...")
         self.client_sock, self.client_addr = self.server_sock.accept()
         print("Server accepted client connection!")
         pass
