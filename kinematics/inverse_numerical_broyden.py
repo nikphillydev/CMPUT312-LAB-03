@@ -1,3 +1,6 @@
+# Authors:
+# Nikolai Philipenko, Yuyang Wang
+
 from kinematics.compute_Jacobian import compute_jacobian
 from kinematics.helper import invert_2x2_matrix, get_distance_between_two_points, lerp, matrix_subtraction, matrix_addition, matrix_multiplication, matrix_transpose, matrix_2_to_2_mul, matrix_4_to_2_mul, matrix_division, matrix_2_to_2_addition, clip
 from robot_core.arm_server import ArmServer
@@ -5,10 +8,10 @@ from robot_core.arm_tracker import ArmTracker
 import time
 from math import radians, pi
 
-GOAL_TOLERANCE = 30                  # pixel
-UPDATE_FREQUENCY = 2                # Hz
-MAX_ABS_ANGLE_DEG = 180.0           # degrees
-NUM_POINTS_PER_PIXEL = 0.1         # for linear interpolation
+GOAL_TOLERANCE = 30                     # pixel
+UPDATE_FREQUENCY = 2                    # Hz
+MAX_ABS_ANGLE_DEG = 180.0               # degrees
+NUM_POINTS_PER_PIXEL = 0.1              # for linear interpolation
 THETA1_TEST_JACOBIAN = radians(5)
 THETA2_TEST_JACOBIAN = radians(5)
 
@@ -18,7 +21,7 @@ def broydens_method(server: ArmServer, tracker: ArmTracker, initial_J) -> None:
     print("initial Jacobian:")
     print(J_cur)
     
-    while(True): # TODO while true
+    while(True):
         
         print("STARTING ITERATION")
         

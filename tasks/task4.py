@@ -1,3 +1,5 @@
+# RUN ON BRICK
+
 import time
 from ev3dev2.sensor.lego import TouchSensor
 from ev3dev2.sensor import INPUT_1

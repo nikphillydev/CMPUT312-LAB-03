@@ -4,6 +4,7 @@ from robot_core.arm_server import ArmServer
 from robot_core.network_settings import HOST, PORT
 
 def run():
+    """To test server / client communication between host PC and EV3DEV computer."""
     server = ArmServer(HOST, PORT)
     increment = 0.1
     counter = 0

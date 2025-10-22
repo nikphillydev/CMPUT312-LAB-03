@@ -1,4 +1,7 @@
-from math import sin, cos, radians
+# Authors:
+# Yuyang Wang
+
+from math import sin, cos
 from typing import List
 from robot_core.arm_driver import ArmDriver
 

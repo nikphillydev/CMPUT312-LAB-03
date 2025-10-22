@@ -1,5 +1,8 @@
 # RUN ON BRICK
 
+# Authors:
+# Nikolai Philipenko
+
 from ev3dev2.motor import Motor, OUTPUT_A, OUTPUT_B, SpeedPercent
 import math
 

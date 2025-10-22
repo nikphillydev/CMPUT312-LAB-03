@@ -1,9 +1,12 @@
-from math import radians
+# Authors:
+# Nikolai Philipenko, Yuyang Wang
+
 from robot_core.arm_server import ArmServer
 from robot_core.arm_tracker import ArmTracker
 
 
 def compute_jacobian(server: ArmServer, tracker: ArmTracker, delta_theta_1, delta_theta_2):
+    """Return the estimate the robot arm Jacobian by calculating how the robot arm moves in the camera frame."""
     old_points_1 = tracker.get_points()
     old_points_1 = old_points_1[0][0:2]
 

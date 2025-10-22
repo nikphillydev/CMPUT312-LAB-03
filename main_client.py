@@ -1,7 +1,7 @@
 # main.py
 
 import argparse
-from tasks import task1, task4, task6
+from tasks import task1, task4, task5
 
 def main():
     '''Use parser to select and run a lab task'''
@@ -17,6 +17,6 @@ def main():
         task4.run()
     elif args.task == 'task6':
         print("Running Task 6")
-        task6.run
+        task5.run
 if __name__ == '__main__':
     main()

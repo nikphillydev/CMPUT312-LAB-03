@@ -14,7 +14,6 @@ CMPUT312-LAB-03/
 │   ├── compute_Jacobian.py            # Jacobian matrix computation
 │   ├── forward.py                     # forward kinematics
 │   ├── helper.py                      # helper functions
-│   ├── inverse_analytical.py          # analytical inverse kinematics
 │   ├── inverse_numerical_broyden.py   # Broyden’s method
 │   └── inverse_numerical_newton.py    # Newton’s method
 │

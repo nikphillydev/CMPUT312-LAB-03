@@ -1,6 +1,7 @@
-#################################################################################################################################
-### This file implements color specific sphere tracking. It can potentially be used for tracking recovery by object detection ###
-#################################################################################################################################
+# RUN ON HOST
+
+# Authors:
+# Nikolai Philipenko
 
 import cv2
 import numpy as np
@@ -55,6 +56,7 @@ class ArmTracker:
             time.sleep(1)
 
     def TrackerThread(self, armColor, goalColor):
+        '''Thread to read camera frames and extract the coordinates (u, v, radius) of the robot end-effector and goal point in the camera frame.'''
         print("Arm tracker thread started...")
         vc = cv2.VideoCapture(CAMERA_DEVICE)        # Get the camera
         if vc.isOpened():
@@ -92,16 +94,14 @@ class ArmTracker:
         print("Arm tracker thread ended")
 
     def get_points(self):
-        """Returns the coordinates (u, v, radius) of the robot end-effector and goal point in the camera frame."""
+        '''Returns the coordinates (u, v, radius) of the robot end-effector and goal point in the camera frame.'''
         self.point_lock.acquire()
         points = [self.arm.tolist(), self.goal.tolist()]
         self.point_lock.release()
         return points
     
     def get_location(self, frame, color):
-        """Detects the largest color region of the given color and returns its centroid and approximate size (radius)."""
-        # blurred = cv2.GaussianBlur(frame, (11, 11), 0)        # Uncomment for gaussian blur
-        # blurred = cv2.medianBlur(frame, 11)
+        '''Detects the largest color region of the given color and returns its centroid and approximate size (radius).'''
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         if color == 'r':
             # Red Tracking
@@ -118,13 +118,6 @@ class ArmTracker:
         if color == 'y':
             # Yellow Tracking
             mask = cv2.inRange(hsv, yellowLowMask, yellowHighMask)
-            
-        # Perform erosion and dilation in the image (in 11x11 pixels squares) in order to reduce the "blips" on the mask
-        # mask = cv2.erode(mask, np.ones((11, 11),np.uint8), iterations=2)
-        # mask = cv2.dilate(mask, np.ones((11, 11),np.uint8), iterations=5)
-        
-        # Mask the blurred image so that we only consider the areas with the desired colour
-        # masked = cv2.bitwise_and(blurred, blurred, mask= mask)
         masked = cv2.bitwise_and(frame, frame, mask= mask)
         
         # Show masked image for debugging
@@ -132,16 +125,13 @@ class ArmTracker:
         
         # Find largest contour
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
         if len(contours) == 0:
             return None
 
         # Find the contour with the largest area
         largest_contour = max(contours, key=cv2.contourArea)
-
         # Calculate spatial moments of the largest contour
         M = cv2.moments(largest_contour)
-
         # Avoid division by zero
         if M["m00"] == 0:
             return None
@@ -149,29 +139,26 @@ class ArmTracker:
         # Centroid coordinates
         cx = int(M["m10"] / M["m00"])
         cy = int(M["m01"] / M["m00"])
-
         # Approximate the size using the contour area (convert to equivalent circle radius)
         area = cv2.contourArea(largest_contour)
         radius = int(np.sqrt(area / np.pi))
 
-        # Return array consistent with previous format [[(u, v, r)]]
-        circles = np.array([[(cx, cy, radius)]], dtype=np.float32)
-        
+        circles = np.array([[(cx, cy, radius)]], dtype=np.float32)    
         return circles
             
     def draw_circles(self, frame, circles, dotColor):
+        '''Draw a circle (u, v, radius) on the given camera frame.'''
         if circles is not None:
             # Convert the (u, v) coordinates and radius of the circles to integers
             circles = np.round(circles[0, :]).astype("int")
-            # Loop over the (u, v) coordinates and radius of the circles
             for (u, v, r) in circles:
                 # Draw the circle in the output image, then draw a rectangle corresponding to the center of the circle
                 # The circles and rectangles are drawn on the original image.
                 cv2.circle(frame, (u, v), r, (0, 255, 0), 4)
                 cv2.rectangle(frame, (u - 5, v - 5), (u + 5, v + 5), dotColor, -1)
                 
-                
 if __name__ == "__main__":
+    '''For testing the arm tracking quality.'''
     print("Tracker Setup")
     tracker = ArmTracker(GREEN, BLUE)
     while True:

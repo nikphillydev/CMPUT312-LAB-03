@@ -1,5 +1,7 @@
+# Authors:
+# Nikolai Philipenko
+
 import time
-from math import degrees
 from typing import List
 from kinematics.forward import forward_kinematics
 from kinematics.helper import compute_jacobian, invert_2x2_matrix, get_distance_between_two_points, lerp
