@@ -8,7 +8,7 @@ from math import radians, pi
 GOAL_TOLERANCE = 30                  # pixel
 UPDATE_FREQUENCY = 2                # Hz
 MAX_ABS_ANGLE_DEG = 180.0           # degrees
-NUM_POINTS_PER_PIXEL = 0.05         # for linear interpolation
+NUM_POINTS_PER_PIXEL = 0.1         # for linear interpolation
 THETA1_TEST_JACOBIAN = radians(5)
 THETA2_TEST_JACOBIAN = radians(5)
 
