@@ -1,3 +1,6 @@
+# Authors:
+# Nikolai Philipenko, Yuyang Wang
+
 from math import sqrt, sin, cos, acos, degrees
 from typing import List, Optional
 
