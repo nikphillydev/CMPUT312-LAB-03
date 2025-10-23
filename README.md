@@ -3,6 +3,7 @@ Our project structure is defined as follows:
 - **bottom-layer - robot_core**: This layer interacts directly with ev3dev2 APIs and provides essential control functions needed to operate the robot arm. It contains the TCP server and TCP client classes to facilitate communication between the EV3 computer and the host PC running the vision model.
 - **middle-layer - kinematics**: This layer implements all forward and inverse kinematic methods.
 - **top-layer - lab_tasks**: This layer is used to implement tasks directly from our lab assignments.
+
 ```
 CMPUT312-LAB-03/
 ├── VSMaterial/                        # visual servoing testing modules 
@@ -26,7 +27,6 @@ CMPUT312-LAB-03/
 │   └── network_settings.py            # network configuration parameters
 │
 ├── tasks/...                          # top-layer lab tasks
-├── main_client.py                     # main program entry for client
-└── main_host.py                       # main program entry for server
-
+├── main_client.py                     # main program entry for EV3 computer
+└── main_host.py                       # main program entry for host PC
 ```
