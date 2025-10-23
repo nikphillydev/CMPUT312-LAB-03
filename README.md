@@ -5,7 +5,7 @@ Our project structure is defined as follows:
 - **top-layer - lab_tasks**: This layer is used to implement tasks directly from our lab assignments.
 ```
 CMPUT312-LAB-03/
-├── VSMaterial/                        # visual servoing modules 
+├── VSMaterial/                        # visual servoing testing modules 
 │   ├── __init__.py
 │   ├── color_tracking_hsv.py          # HSV-based color tracking tuning program
 │
@@ -20,8 +20,8 @@ CMPUT312-LAB-03/
 ├── robot_core/                        # bottom-layer robot drivers & networking
 │   ├── __init__.py
 │   ├── arm_client.py                  # client communication interface
-│   ├── arm_driver.py                  # link length & low-level driver
-│   ├── arm_server.py                  # robot arm control server
+│   ├── arm_driver.py                  # robot arm low-level driver
+│   ├── arm_server.py                  # server communication interface
 │   ├── arm_tracker.py                 # robot pose & movement tracking
 │   └── network_settings.py            # network configuration parameters
 │
